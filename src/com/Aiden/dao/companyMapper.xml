@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Aiden.dao.companyMapper">
+
+	<resultMap type="Company" id="resultCompany">
+		<id property="id" column="id"/>
+		<result property="companyName" column="companyName"/>
+		<collection property="persons" column="id" select="com.Aiden.dao.personMapper.findPersonWithByCompanyId"/>
+	</resultMap>
+
+	<select id="findCompanyById" parameterType="Integer" resultMap="resultCompany">
+		select * from t_company where id=#{id}
+	</select>
+
+</mapper>

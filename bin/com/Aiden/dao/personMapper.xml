@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.Aiden.dao.personMapper">
+
+	<resultMap type="Person" id="resultPerson">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="age" column="age"/>
+	</resultMap>
+	<!-- <resultMap type="Person" id="resultPersonWithAddress">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="age" column="age"/>
+		
+		<result property="address.id" column="id"/>
+		<result property="address.country" column="country"/>
+		<result property="address.city" column="city"/>
+		<result property="address.district" column="district"/>
+	</resultMap> -->
+	
+	<!-- <resultMap type="Person" id="resultPersonWithAddress">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="age" column="age"/>
+		
+		<association property="address" resultMap="resultAddress"/>
+	</resultMap>
+	<resultMap type="Address" id="resultAddress">
+		<id property="id" column="id"/>
+		<result property="country" column="country"/>
+		<result property="city" column="city"/>
+		<result property="district" column="district"/>
+	</resultMap> -->
+
+	<!-- <resultMap type="Person" id="resultPersonWithAddress">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="age" column="age" />
+
+		<association property="address" javaType="Address">
+			<id property="id" column="id" />
+			<result property="country" column="country" />
+			<result property="city" column="city" />
+			<result property="district" column="district" />
+		</association>
+	</resultMap> -->
+	
+	<resultMap type="Person" id="resultPersonWithAddress">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="age" column="age" />
+		<association property="address" column="addressId" select="com.Aiden.dao.addressMapper.findAddressById"/>
+	</resultMap>
+	
+	<resultMap type="Person" id="resultPersonWithCompany">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="age" column="age" />
+		<association property="address" column="addressId" select="com.Aiden.dao.addressMapper.findAddressById"/>
+		<association property="company" column="companyId" select="com.Aiden.dao.companyMapper.findCompanyById"/>
+	</resultMap>
+	
+	
+
+	<insert id="addPerson" parameterType="Person">
+		insert into t_person values (null,#{name},#{age})
+	</insert>
+	
+	<update id="updatePerson" parameterType="Person">
+		update t_person set name=#{name},age=#{age} where id=#{id}
+	</update>
+	
+	<delete id="deletePerson" parameterType="Integer">
+		delete from t_person where id=#{id}
+	</delete>
+	
+	<select id="findPersonById" parameterType="Integer" resultType="Person">
+		select * from t_person where id=#{id}
+	</select>
+	
+	<select id="findPerson" resultType="Person">
+		select * from t_person
+	</select>
+	
+	<select id="findPersonWithAddressById" parameterType="Integer" resultMap="resultPersonWithAddress">
+		select * from t_person tp,t_address ta where tp.addressId=ta.id and tp.id=#{id}
+	</select>
+	
+	<select id="findPersonWithByCompanyId" parameterType="Integer" resultMap="resultPersonWithCompany">
+		select * from t_person where companyId=#{companyId}
+	</select>
+	
+</mapper>
